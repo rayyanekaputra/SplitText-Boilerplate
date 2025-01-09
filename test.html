@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery SplitText</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    .char,
+    .word,
+    .line {
+      display: inline-block;
+    }
+
+    .line {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="text" style="width: 300px; font-size: 24px; line-height: 1.5;">
+    This is a jQuery-based SplitText example.
+  </div>
+
+  <script>
+    /**
+     * Splits text into characters, words, or lines using jQuery.
+     * @param {jQuery} $element - The jQuery element containing the text.
+     * @param {string} type - The type of split: 'chars', 'words', 'lines'.
+     */
+    function splitText($element, type) {
+      const originalText = $element.text();
+      const lines = [];
+
+      // Helper: Wrap text in a span
+      const wrapText = (text, className) => `<span class="${className}">${text}</span>`;
+
+      if (type === 'chars') {
+        $element.html(
+          originalText
+            .split('')
+            .map(char => wrapText(char === ' ' ? '&nbsp;' : char, 'char'))
+            .join('')
+        );
+      } else if (type === 'words') {
+        $element.html(
+          originalText
+            .split(' ')
+            .map(word => wrapText(word, 'word'))
+            .join(' ')
+        );
+      } else if (type === 'lines') {
+        const words = originalText.split(' ');
+        $element.html(
+          words.map(word => wrapText(word, 'word')).join(' ')
+        );
+
+        const tempLines = [];
+        $element.children('.word').each(function () {
+          const $word = $(this);
+          const top = $word.offset().top;
+          if (!tempLines.length || tempLines[tempLines.length - 1].top !== top) {
+            tempLines.push({ top, words: [] });
+          }
+          tempLines[tempLines.length - 1].words.push($word[0].outerHTML);
+        });
+
+        tempLines.forEach(line => {
+          lines.push(line.words.join(' '));
+        });
+
+        $element.html(lines.map(line => wrapText(line, 'line')).join(''));
+      }
+    }
+
+    // Usage
+    const $textElement = $('#text');
+    splitText($textElement, 'chars'); // Options: 'chars', 'words', 'lines'
+
+    // Event listeners for the split text (now using 'char' class)
+    $('#text .char').each(function () {
+      $(this).on('mouseenter', function () {
+        console.log("you're in: " + $(this).text());
+        gsap.to(this, { color: 'green' });
+      });
+
+      $(this).on('mouseleave', function () {
+        console.log("you're leaving: " + $(this).text());
+        gsap.to(this, { color: '#4e4e4e' });
+      });
+    });
+
+  </script>
+</body>
+
+</html>
