@@ -1,5 +1,5 @@
 # SplitText-Boilerplate
-***Not a Plugin. ***An Alternative to SplitText by GSAP and How to Use Them in with jQuery
+**Not a Plugin.**An Alternative to SplitText by GSAP and How to Use Them in with jQuery
 
 If you're looking for a simple, jQuery-based alternative to GSAP's SplitText() for breaking up your text into characters, words, or lines, you're in the right place! This is a lightweight, no-frills way to split text for easy animations or styling. And guess what? It's free and open-source!
 
